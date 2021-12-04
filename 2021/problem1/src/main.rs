@@ -10,11 +10,11 @@ fn main() -> Result<()> {
     let file = File::open(filename).context("Failed to open file.")?;
     let reader = BufReader::new(file);
 
-    let mut previous = Option::<u32>::None;
-    let mut previous_increases = 0;
+    let mut prev: Option<u32> = None;
+    let mut prev_incrs = 0;
 
     let mut window = VecDeque::new();
-    let mut window_increases = 0;
+    let mut window_incrs = 0;
     const WINDOW_SIZE: usize = 3;
 
     for line in reader.lines() {
@@ -23,16 +23,16 @@ fn main() -> Result<()> {
             format!("Failed to parse '{}' as unsigned integer.", line)
         })?;
 
-        if let Some(prev) = previous {
+        if let Some(prev) = prev {
             if curr > prev {
-                previous_increases += 1;
+                prev_incrs += 1;
             }
         }
         if window.len() == WINDOW_SIZE {
-            let prev_window_sum = window.iter().sum::<u32>();
-            let curr_window_sum = window.iter().skip(1).sum::<u32>() + curr;
-            if curr_window_sum > prev_window_sum {
-                window_increases += 1;
+            let prev_sum = window.iter().sum::<u32>();
+            let curr_sum = window.iter().skip(1).sum::<u32>() + curr;
+            if curr_sum > prev_sum {
+                window_incrs += 1;
             }
         }
 
@@ -40,12 +40,12 @@ fn main() -> Result<()> {
             window.pop_front();
         }
         window.push_back(curr);
-        previous = Some(curr);
+        prev = Some(curr);
     }
-    println!("Number of measurement increases: {}", previous_increases);
+    println!("Increases (relative to previous): {}", prev_incrs);
     println!(
-        "Number of measurement increases (window of size {}): {}",
-        WINDOW_SIZE, window_increases
+        "Increases (window of size {}): {}",
+        WINDOW_SIZE, window_incrs
     );
 
     Ok(())
