@@ -2,7 +2,7 @@ use anyhow::{anyhow, bail, Context, Result};
 use std::fs::File;
 use std::io::{BufRead, BufReader};
 
-fn most_common_bit(bits: &Vec<char>) -> char {
+fn most_common_bit(bits: &[char]) -> char {
     // If bits are equally common, return 1.
     let count = bits.iter().filter(|&&b| b == '1').count();
     if count >= bits.len() - count {
@@ -12,7 +12,7 @@ fn most_common_bit(bits: &Vec<char>) -> char {
     }
 }
 
-fn least_common_bit(bits: &Vec<char>) -> char {
+fn least_common_bit(bits: &[char]) -> char {
     // If bits are equally common, return 0.
     let count = bits.iter().filter(|&&b| b == '0').count();
     println!("{}, {}", bits.len(), count);
@@ -75,7 +75,7 @@ fn main() -> Result<()> {
                 &o2_values
                     .iter()
                     .map(|s| s.chars().nth(i).unwrap())
-                    .collect(),
+                    .collect::<Vec<char>>(),
             );
             o2_values.retain(|s| s.chars().nth(i) == Some(o2_bit));
         } else {
@@ -91,7 +91,7 @@ fn main() -> Result<()> {
                 &co2_values
                     .iter()
                     .map(|s| s.chars().nth(i).unwrap())
-                    .collect(),
+                    .collect::<Vec<char>>(),
             );
             co2_values.retain(|v| v.chars().nth(i) == Some(co2_bit));
         } else {
